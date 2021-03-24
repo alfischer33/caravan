@@ -1,0 +1,105 @@
+
+{% extends "users/layout.html" %} {% load static %} {% block cssfiles %} {%endblock cssfiles %} {% block searchform %}
+<form
+  class="form-inline my-2 my-lg-0 ml-5"
+  action="{% url 'search_users' %}"
+  method="get"
+>
+  <input name="q" type="text" placeholder="Search users.." />
+  <button class="btn btn-success my-2 my-sm-0 ml-4" type="submit">
+    Search
+  </button>
+</form>
+{% endblock searchform %} {% block content %}
+
+<div class="main-content">
+  <div class="container mt-7">
+    <div class="row">
+      <div class="col-xl-8 m-auto order-xl-2 mb-5 mt-5 mb-xl-0">
+        <div class="card card-profile shadow">
+          <div class="row justify-content-center">
+            <!-- image here -->
+          </div>
+          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"><h2> {{ c.name }} </h2></div>
+          <div class="card-body pt-0 pt-md-4">
+            <div class="text-center">
+              <text>{{ c.description }}</text>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="card-profile-stats d-flex justify-content-center mt-md-1">
+                  <div>
+                    <span class="heading">{{ stops.count }}</span>
+                    {% if stops.count == 1 %}
+                    <span class="description">stop</span>
+                    {% else %}
+                    <span class="description">stops</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="card-profile-stats d-flex justify-content-center mt-md-1">
+                  <div>
+                    <span class="heading">{{ c.members.count }}</span>
+                    {% if c.members.count == 1 %}
+                    <span class="description">member</span>
+                    {% else %}
+                    <span class="description">members</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <hr class="my-2" />
+              {% if ismember == True %}
+              <small>
+                <a
+                  class="btn btn-danger"
+                  href="{% url 'leave_caravan' c.name %}"
+                  >Leave Caravan</a>
+              </small>
+              {% else %}
+              <small>
+                <a
+                  class="btn btn-success"
+                  href="{% url 'join_caravan' c.name %}"
+                  >Join Caravan</a>
+              </small>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% for s in stops %}
+        <div class="card card-signin my-5">
+          <div class="card-body">
+              <h4> <a href="{{ s.get_absolute_url }}">Stop at {{ s.destination }}</a></h4>
+              <br>
+              <a class="text-dark">
+                  <b>from {{ s.start_date }} to {{ s.end_date }}</b><br>
+                  <a>with {{ s.attendees.count }} attendees</a>
+              </a>
+          </div>
+        </div>
+        {% endfor %}
+        {% if ismember %}
+        <div class="card card-signin my-5">
+          <div class="card-body text-center"">
+            <small>
+              <a
+                class="btn btn-success"
+                href="{% url 'add_stop' c.name %}"
+                >Suggest Stop</a>
+            </small>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %} {% block jsfiles %}{% endblock jsfiles %}
