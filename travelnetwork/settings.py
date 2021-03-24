@@ -28,7 +28,10 @@ DEBUG = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'caravan-travel-network.herokuapp.com',
+    'localhost:8000'
+]
 
 
 # Application definition
