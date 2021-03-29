@@ -80,7 +80,13 @@
               <br>
               <a class="text-dark">
                   <b>from {{ s.start_date }} to {{ s.end_date }}</b><br>
+                  <a>Status: {{ s.status|title }}</a><br>
+                  {% if s.status != 'proposal' %}
                   <a>with {{ s.attendees.count }} attendees</a>
+                  {% else %}
+                  <a></a>
+                  {% endif %}
+                  
               </a>
           </div>
         </div>

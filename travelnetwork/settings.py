@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'caravan-travel-network.herokuapp.com',
-    'localhost:8000'
+    'localhost'
 ]
 
 

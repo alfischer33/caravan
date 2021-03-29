@@ -89,10 +89,10 @@ class Stop(models.Model):
         (tentative, 'Tentative'),
         (proposal, 'Proposal')
     )
-    status = models.CharField(max_length=15, choices=status_choices)
+    status = models.CharField(max_length=15, choices=status_choices, default=proposal)
 
     def __str__(self):
-        return f'{self.caravan} stop at {self.destination}: {self.start_date} - {self.end_date}'
+        return f'{self.caravan} stop at {self.destination}: {self.start_date} to {self.end_date}'
 
     def get_absolute_url(self):
         return f"/feed/stop/{self.slug}"
@@ -116,6 +116,7 @@ class EventDestination(Destination):
     event_name = models.CharField(max_length=31)
 class HostelDestination(Destination):
     rating = models.FloatField()
+# AccommodationDestination (Hotels, etc.), CampDestination
 
 class Government(models.Model):
     caravan = models.OneToOneField('caravan', on_delete=models.CASCADE)
@@ -137,17 +138,30 @@ class Government(models.Model):
 class Forum(models.Model):
     resolved = models.BooleanField(default=False)
     government = models.ForeignKey('government', on_delete=models.CASCADE)
-    description = models.CharField(max_length=511)
+    description = models.CharField(max_length=511, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
+    score = models.IntegerField(default=0)
 
 class StopForum(Forum):
     stop = models.ForeignKey('stop', on_delete=models.CASCADE)
+
+    @classmethod
+    def from_stop(cls, s):
+        sf = cls(   
+            stop=s, 
+            government=Government.objects.filter(caravan=s.caravan).first(), 
+            description=s.description, 
+            deadline=s.start_date - datetime.timedelta(days=7))
+        return sf
+
+    def __str__(self):
+        return str(self.stop) + ' forum'
 
 class AddLeaderForum(Forum):
     new_leader = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Vote(models.Model):
-    member = models.ForeignKey(User, on_delete=models.CASCADE) #this should be deleted if the user leaves the group
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #this should be deleted if the user leaves the group
     forum = models.ForeignKey('forum', on_delete=models.CASCADE, null=True)
     infavor = models.BooleanField()
