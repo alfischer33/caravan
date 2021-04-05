@@ -53,6 +53,8 @@ urlpatterns = [
     path('feed/stop/leave/<slug>', feed_views.leave_stop, name='leave_stop'),
     path('feed/stop/join/<slug>', feed_views.join_stop, name='join_stop'),
     path('feed/add-stop/<c_name>', feed_views.add_stop, name='add_stop'),
+    path('feed/stop/vote_yes/<slug>', feed_views.stop_vote_yes, name='stop_vote_yes'),
+    path('feed/stop/remove_vote/<slug>', feed_views.stop_remove_vote, name='stop_remove_vote'),
 ]
 
 if settings.DEBUG:

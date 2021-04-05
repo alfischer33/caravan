@@ -15,9 +15,9 @@ def stop(request, slug):
     caravan_member = request.user in s.caravan.members.all()
     print(caravan_member)
 
-    is_interested = Vote.objects.filter(user=request.user, forum=sf, infavor=True)
+    is_interested = Vote.objects.filter(user=request.user, forum=sf, infavor=True).count() > 0
 
-    context={"s":s, "sf":sf, "joined":joined, 'caravan_member':caravan_member}
+    context={"s":s, "sf":sf, "joined":joined, 'caravan_member':caravan_member, 'is_interested':is_interested}
 
     return render(request, 'feed/stop.html', context)
 
@@ -101,12 +101,32 @@ def add_stop(request, c_name=None):
     #context={}
     #return render(request, 'feed/add_stop.html', context)
 
+# @login_required
+# def edit_stop(request):
+
+#     #must be a leader if decided, or the creator or a leader if tentative or proposal
+
+#     context={}
+#     return render(request, 'feed/edit_stop.html', context)
+
 @login_required
-def edit_stop(request):
+def stop_vote_yes(request, slug):
 
-    #must be a leader if decided, or the creator or a leader if tentative or proposal
+    s = Stop.objects.get(slug=slug)
+    u = request.user
+    sf = StopForum.objects.get(stop=s)
+    v = Vote.create_yes(u,sf)
+    v.save()
 
-    context={}
-    return render(request, 'feed/edit_stop.html', context)
+    return HttpResponseRedirect(f'/feed/stop/{s.slug}')
 
-# def search_stops(request):
+@login_required
+def stop_remove_vote(request, slug):
+
+    s = Stop.objects.get(slug=slug)
+    u = request.user
+    sf = StopForum.objects.get(stop=s)
+    v = Vote.objects.filter(user=u, forum=sf).all()
+    v.delete()
+
+    return HttpResponseRedirect(f'/feed/stop/{s.slug}')

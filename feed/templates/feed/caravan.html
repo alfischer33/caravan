@@ -20,7 +20,12 @@
           <div class="row justify-content-center">
             <!-- image here -->
           </div>
-          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4"><h2> {{ c.name }} </h2></div>
+          <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+            <h2> {{ c.name }} </h2>
+            {% if begun == False %}
+              <h5>Starting {{ c.start_date }}</h5>
+            {% endif %}
+          </div>
           <div class="card-body pt-0 pt-md-4">
             <div class="text-center">
               <text>{{ c.description }}</text>
@@ -76,18 +81,26 @@
         {% for s in stops %}
         <div class="card card-signin my-5">
           <div class="card-body">
+            {% if s.stop_queue_position == 0 %}
+              <a>Current:</a>
               <h4> <a href="{{ s.get_absolute_url }}">Stop at {{ s.destination }}</a></h4>
-              <br>
+              <b class="text-dark">until {{ s.end_date }}</b>
+            {% elif s.stop_queue_position > 0 %}
+              {% if s.stop_queue_position == 1 %}
+              <a>Next:</a>
+              {% else %}
+              <a>In {{s.stop_queue_position}} more stops:</a>
+              {% endif %}
+              <h4> <a href="{{ s.get_absolute_url }}">Stop at {{ s.destination }}</a></h4>
               <a class="text-dark">
-                  <b>from {{ s.start_date }} to {{ s.end_date }}</b><br>
+                  {% if s.status != 'decided' %}
                   <a>Status: {{ s.status|title }}</a><br>
-                  {% if s.status != 'proposal' %}
-                  <a>with {{ s.attendees.count }} attendees</a>
+                  <a>Interest: {{ s.stopforum.score }}</a>
                   {% else %}
                   <a></a>
                   {% endif %}
-                  
               </a>
+            {% endif %}
           </div>
         </div>
         {% endfor %}

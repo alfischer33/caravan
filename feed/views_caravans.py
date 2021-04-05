@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import datetime
 
 def caravan(request, name):
 
@@ -15,9 +16,11 @@ def caravan(request, name):
 
     #https://www.abidibo.net/blog/2014/05/22/check-if-user-belongs-group-django-templates/
 
-    context={"c":c, "ismember":ismember, "stops":stops}
-    
+    begun = c.start_date <= datetime.date.today()
+    first_forum = stops.first().stopforum
 
+    context={"c":c, "ismember":ismember, "stops":stops, "begun":begun}
+    
     return render(request, 'feed/caravan.html', context)
 
 def caravan_list(request):

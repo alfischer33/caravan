@@ -17,4 +17,4 @@ class StopCreateForm(forms.ModelForm):
     
     class Meta:
         model = Stop
-        fields = ['caravan', 'destination', 'description', 'start_date', 'end_date', 'private']
+        fields = ['caravan', 'destination', 'description', 'stop_queue_position', 'private']

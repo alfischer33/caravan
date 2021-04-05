@@ -34,18 +34,21 @@
               <hr class="my-2" />
               <h4>Forum</h4>
               <a>Interest Score: {{ sf.score }}</a><br>
+              {% if is_interested %}
+              <small>
+                <a>You are interested in this stop.</a>
+                <a
+                  href="{% url 'stop_remove_vote' s.slug %}"
+                  >I'm no longer interested.</a>
+              </small>
+              {% else %}
               <small>
                 <a
                   class="btn btn-success"
-                  href="{% url 'leave_stop' s.slug %}"
+                  href="{% url 'stop_vote_yes' s.slug %}"
                   >I'm interested</a>
               </small>
-              <small>
-                <a
-                  class="btn btn-danger"
-                  href="{% url 'join_stop' s.slug %}"
-                  >Vote No</a>
-              </small>
+              {% endif %}
             </div>
             {% endif %}
             {% if s.status != 'proposal' %}
